@@ -1,0 +1,77 @@
+
+{
+    "name": "rcf_OHEM_stage0",
+    "n_gpu": 2,
+    "ohem_loss": 0.5,
+
+    "arch": {
+        "type": "rcf_vgg",
+        "args": {
+            "stage": 0,
+            "backbone": "models.vgg16(pretrained=True)"
+        }
+    },
+    "data_loader": {
+        "type": "dataloader_test",
+        "train_fg_dir": "/home/wangyk/experiment/DIM/data/train/fg/",
+        "train_alpha_dir": "/home/wangyk/experiment/DIM/data/train/alpha/",
+        "train_image_dir": "/home/wangyk/experiment/DIM/data/train/image/",
+        "train_bg_dir": "/home/wangyk/experiment/DIM/data/train/bg/",
+        "train_fg_names": "/home/wangyk/experiment/DIM/data/train/train_fg_names.txt",
+        "train_bg_names": "/home/wangyk/experiment/DIM/data/train/train_bg_names.txt",
+        "test_fg_dir": "/home/wangyk/experiment/DIM/data/test/fg/",
+        "test_alpha_dir": "/home/wangyk/experiment/DIM/data/test/alpha/",
+        "test_image_dir": "/home/wangyk/experiment/DIM/data/test/image/",
+        "test_bg_dir": "/home/wangyk/experiment/DIM/data/test/bg/",
+        "test_trimap_dir" : "/home/wangyk/experiment/DIM/data/test/trimap/",
+        "test_fg_names": "/home/wangyk/experiment/DIM/data/test/test_fg_names.txt",
+        "test_bg_names": "/home/wangyk/experiment/DIM/data/test/test_bg_names.txt",
+        "alpha_com_input" : "/home/wangyk/experiment/DIM/data/alpha_com/input_lowers/",
+        "alpha_com_trimap1" : "/home/wangyk/experiment/DIM/data/alpha_com/trimap_lowers/Trimap1/",
+        "alpha_com_trimap2" : "/home/wangyk/experiment/DIM/data/alpha_com/trimap_lowers/Trimap2/",
+        "alpha_com_trimap3" : "/home/wangyk/experiment/DIM/data/alpha_com/trimap_lowers/Trimap3/",
+        "args":{
+            "usage": "train",
+            "batch_size": 8,
+            "shuffle": true,
+            "validation_split": 0.1,
+            "num_workers": 4,
+            "transform_switch" : true
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args":{
+            "lr": 0.0001,
+            "weight_decay": 0.00001,
+            "amsgrad": true
+        }
+    },
+    "loss": [
+        "overall_loss",
+        "alpha_prediction_loss",
+        "compositional_loss"
+    ],
+    "metrics": [
+        "MSE", "SAD"
+    ],
+    "lr_scheduler": {
+        "type":"StepLR",
+        "args":{
+            "step_size":15,
+            "gamma":0.1
+        }
+    },
+    "trainer": {
+        "epochs": 100,
+        "save_dir": "saved",
+        "save_freq": 1,
+        "verbosity": 2,
+        "monitor": "val_loss",
+        "monitor_mode": "min"
+    },
+    "visualization":{
+        "tensorboardX": true,
+        "log_dir": "saved/runs"
+    }
+}

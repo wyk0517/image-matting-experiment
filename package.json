@@ -1,0 +1,51 @@
+
+{
+    "name": "Mnist_LeNet", // 通常是日志记录的信息 training session name
+    "n_gpu": 2, //  GPU个数  number of GPUs to use for training
+
+    "arch": {
+        "type": "MnistModel", // name of model architecture to train
+        "args": {}
+    },
+    "data_loader": {
+        "type": "MnistDataLoader",   // selecting data loader
+        "args":{
+            "data_dir": "data/",  // dataset path
+            "batch_size": 128, // batch size
+            "shuffle": true, // shuffle training data before splitting
+            "validation_split": 0.1, // validation data ratio
+            "num_workers": 2 // number of cpu processes to be used for data loading
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args":{
+            "lr": 0.001,  // learning rate
+            "weight_decay": 0,  // (optional) weight decay
+            "amsgrad": true //一种新的优化方法
+        }
+    },
+    "loss": "nll_loss",
+    "metrics": [    // list of metrics to evaluate
+        "my_metric", "my_metric2"
+    ],
+    "lr_scheduler": {  // lr的配置
+        "type":"StepLR",
+        "args":{
+            "step_size":50,
+            "gamma":0.1
+        }
+    },
+    "trainer": { // 训练细节
+        "epochs": 1000,  // number of training epochs
+        "save_dir": "saved/", // checkpoints are saved in save_dir/name
+        "save_freq": 1, // save checkpoints every save_freq epochs
+        "verbosity": 2, // 0: quiet, 1: per epoch, 2: full
+        "monitor": "val_loss", // val_loss是评测标准
+        "monitor_mode": "min" // min是最小化 max是最大化
+    },
+    "visualization":{
+        "tensorboardX": true,
+        "log_dir": "saved/runs"
+    }
+}
